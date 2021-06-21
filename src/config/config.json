@@ -1,0 +1,5 @@
+{
+  "urlApi": {
+    "users": "http://localhost:8080/api/utilizador/"
+  }
+}

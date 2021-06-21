@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/style.css";
-
+import { useAuth } from "../contexts";
 import logo from "../assets/img/logo.png";
 import logout from "../assets/img/logout.png";
 import message from "../assets/img/message.png";
@@ -14,9 +14,33 @@ import avatar2 from "../assets/img/avatar2.png";
 import avatar3 from "../assets/img/avatar3.png";
 
 const Header: React.FC = () => {
+  let history = useHistory();
+  const { user, AuthLogout } = useAuth();
+  const [tipoDeUtilizador, setTipoDeUtilizador] = useState("");
+  const [display, setDisplay] = useState(false);
+
+  const exit = () => {
+    AuthLogout();
+    history.push("/login");
+  };
+
+  useEffect(() => {
+    if (user?.tipodeutilizador === 0) {
+      setTipoDeUtilizador("Estudante");
+    }
+    if (user?.tipodeutilizador === 1) {
+      setTipoDeUtilizador("Professor");
+      setDisplay(true);
+    }
+    if (user?.tipodeutilizador === 2) {
+      setTipoDeUtilizador("Administrador");
+      setDisplay(true);
+    }
+  }, []);
+
   return (
     <header>
-      <div className="navbar shadown-sm">
+      <div className="navbar shadown-sm" style={{ marginLeft: "350px" }}>
         <div className="container">
           <a href="#">
             <img
@@ -30,34 +54,37 @@ const Header: React.FC = () => {
           <div className="col text-center">
             <div className="col-sm">
               <h4 style={{ color: "#FFF" }}>
-                <span style={{ color: "#D63578" }}>Bem-Vindo,</span> Nuno Gomes
+                <span style={{ color: "#D63578" }}>Bem-Vindo,</span>{" "}
+                {user?.nome}
               </h4>
             </div>
-            <div className="col-sm" style={{ marginRight: 500 }}>
+            <div className="col-sm">
               <h5 style={{ color: "#FFF" }}>
-                <span style={{ color: "#D63578" }}>Numero:</span> a38368{" "}
+                <span style={{ color: "#D63578" }}>Numero:</span> {user?.login}{" "}
                 <span style={{ color: "#D63578", marginLeft: "2%" }}>
                   Cargo:
                 </span>{" "}
-                Estudante
+                {tipoDeUtilizador}
               </h5>
             </div>
           </div>
-          <Link
-            to="/menuadmin"
-            className="text-center"
-            style={{ color: "#fff" }}
-          >
-            <img
-              src={admin}
-              alt="admin"
-              className="img-fluid"
-              height="80"
-              width="87"
-            />
-            <h6>Painel</h6>
-            <h6>Administração</h6>
-          </Link>
+          <div style={display ? { display: "flex" } : { display: "none" }}>
+            <Link
+              to="/menuadmin"
+              className="text-center"
+              style={{ color: "#fff" }}
+            >
+              <img
+                src={admin}
+                alt="admin"
+                className="img-fluid"
+                height="80"
+                width="87"
+              />
+              <h6>Painel</h6>
+              <h6>Administração</h6>
+            </Link>
+          </div>
           <div className="col" style={{ color: "#FFF" }}>
             <div className="col-sm">
               <a href="#">
@@ -74,70 +101,18 @@ const Header: React.FC = () => {
                     width="35"
                   />
                 </button>
-                <div className="modal fade" aria-hidden="true">
-                  <div className="modal-dialog">
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <img src={box} alt="box" />
-                        <h5 className="modal-title">Nova Mensagem</h5>
-                        <span aria-hidden="true">&times;</span>
-                      </div>
-                      <div className="modal-body">
-                        <img
-                          src={avatar1}
-                          alt="avatar1"
-                          className="img-fluid"
-                          height="35"
-                          width="35"
-                        />
-                        <p>ADMIN - Roberto</p>
-                      </div>
-                      <div className="modal-body">
-                        <img
-                          src={avatar2}
-                          alt="avatar2"
-                          className="img-fluid"
-                          height="35"
-                          width="35"
-                        />
-                        <p>FUNCIONARIO - Andreia</p>
-                      </div>
-                      <div className="modal-body">
-                        <img
-                          src={avatar3}
-                          alt="avatar3"
-                          className="img-fluid"
-                          height="35"
-                          width="35"
-                        />
-                        <p>PROF - Luis</p>
-                      </div>
-                      <div className="modal-body">
-                        <img
-                          src={avatar1}
-                          alt="avatar1"
-                          className="img-fluid"
-                          height="35"
-                          width="35"
-                        />
-                        <p>ADMIN - Keivin</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </a>
             </div>
             <div className="navbar shadow-sm">
               <div className="container">
-                <Link to="/login">
-                  <img
-                    src={logout}
-                    alt="logout"
-                    className="img-fluid"
-                    height="35"
-                    width="35"
-                  />
-                </Link>
+                <img
+                  onClick={() => exit()}
+                  src={logout}
+                  alt="logout"
+                  className="img-fluid"
+                  height="35"
+                  width="35"
+                />
               </div>
             </div>
           </div>

@@ -1,14 +1,37 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, useHistory } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/style.css";
-
 import LeftSide from "../../components/leftSide";
-
 import arrowBack from "../../assets/img/arrow_back.png";
 import arrowFront from "../../assets/img/arrow_front.png";
+import { useAuth } from "../../contexts";
 
 export const Login = () => {
+  const { AuthLogin } = useAuth();
+
+  let history = useHistory();
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [display, setDisplay] = useState(false);
+
+  async function sendForm(e: any) {
+    e.preventDefault();
+
+    const session = await AuthLogin({ login, password });
+
+    console.log("session:", session);
+
+    if (!session) {
+      setDisplay(true);
+      setTimeout(() => {
+        setDisplay(false);
+      }, 3000);
+    } else {
+      history.push("/menu");
+    }
+  }
+
   return (
     <div className="row no-gutters">
       <LeftSide />
@@ -49,10 +72,10 @@ export const Login = () => {
 
           <div className="row">
             <div className="offset-md-3 col-md-4" style={{ marginTop: "25%" }}>
-              <form action="/login">
+              <form onSubmit={(e) => sendForm(e)}>
                 <div className="form-group" style={{ marginTop: 10 }}>
                   <label
-                    htmlFor="inputEmail"
+                    htmlFor="inputUser"
                     style={{ marginBottom: 5, marginLeft: 5, color: "#696F79" }}
                   >
                     Username
@@ -60,9 +83,11 @@ export const Login = () => {
                   <input
                     type="text"
                     className="form-control"
-                    id="inputEmail"
+                    id="inputUser"
                     placeholder="Ex.: aXXXXX"
                     style={{ width: 430, height: 65 }}
+                    value={login}
+                    onChange={(e) => setLogin(e.currentTarget.value)}
                   />
                 </div>
                 <div className="form-group" style={{ marginTop: 10 }}>
@@ -78,6 +103,8 @@ export const Login = () => {
                     id="inputPassword"
                     placeholder="*******************"
                     style={{ width: 430, height: 65 }}
+                    value={password}
+                    onChange={(e) => setPassword(e.currentTarget.value)}
                   />
                 </div>
                 <div className="form-group" style={{ marginTop: 10 }}>
@@ -88,21 +115,25 @@ export const Login = () => {
                     Esqueci-me da Password
                   </Link>
                 </div>
-                <Link to="/menu">
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    style={{
-                      marginTop: 10,
-                      backgroundColor: "#D63578",
-                      border: 0,
-                      width: 430,
-                      height: 65,
-                    }}
-                  >
-                    Entrar
-                  </button>
-                </Link>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{
+                    marginTop: 10,
+                    backgroundColor: "#D63578",
+                    border: 0,
+                    width: 430,
+                    height: 65,
+                  }}
+                >
+                  Entrar
+                </button>
+                <h3
+                  className="erroMsg"
+                  style={display ? { display: "flex" } : { display: "none" }}
+                >
+                  Usuário ou senha inválidos
+                </h3>
               </form>
             </div>
           </div>
