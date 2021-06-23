@@ -6,12 +6,7 @@ import { useAuth } from "../contexts";
 import logo from "../assets/img/logo.png";
 import logout from "../assets/img/logout.png";
 import message from "../assets/img/message.png";
-import box from "../assets/img/box.png";
 import admin from "../assets/img/admin.png";
-
-import avatar1 from "../assets/img/avatar1.png";
-import avatar2 from "../assets/img/avatar2.png";
-import avatar3 from "../assets/img/avatar3.png";
 
 const Header: React.FC = () => {
   let history = useHistory();

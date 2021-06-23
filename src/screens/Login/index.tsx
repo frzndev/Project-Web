@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/style.css";
@@ -19,8 +19,6 @@ export const Login = () => {
     e.preventDefault();
 
     const session = await AuthLogin({ login, password });
-
-    console.log("session:", session);
 
     if (!session) {
       setDisplay(true);

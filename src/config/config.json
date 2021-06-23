@@ -1,5 +1,6 @@
 {
   "urlApi": {
-    "users": "http://localhost:8080/api/utilizador/"
+    "users": "http://localhost:8080/api/utilizador/",
+    "equipamento": "http://localhost:8080/api/equipamento/"
   }
 }

@@ -7,7 +7,7 @@ import ipb from "../assets/img/ipb.png";
 const Footer: React.FC = () => {
   return (
     <footer>
-      <div className="container d-flex justify-content-center">
+      <div className="container d-flex justify-content-center" style={{ marginTop: "62px" }}>
         <img src={ipb} alt="ipb" />
       </div>
     </footer>

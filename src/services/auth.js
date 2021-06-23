@@ -28,3 +28,14 @@ export const SignUp = async (data) => {
   const response = await axios(req);
   return response.data;
 };
+
+export const getEquipamento = async (data) => {
+  let req = {
+    method: "post",
+    url: `${config.urlApi.equipamento}filter`,
+    headers,
+    data,
+  };
+  const response = await axios(req);
+  return response.data;
+};

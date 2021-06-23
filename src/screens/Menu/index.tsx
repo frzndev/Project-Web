@@ -1,12 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 
 import Header from "../../components/header";
 import Footer from "../../components/footer";
+import { getEquipamento } from "../../services/auth";
 
 export const Menu = () => {
+  const [tipoDeEquipamento, setTipoDeEquipamento] = useState(1);
+  const [equipamentos, setEquipamentos] = useState([]);
+
+  const [checkBox1, setCheckBox1] = useState(false);
+  const [checkBox2, setCheckBox2] = useState(false);
+
+  const handleChangeOne = () => {
+    setCheckBox1(true);
+    setCheckBox2(false);
+    setTipoDeEquipamento(1);
+    getParts();
+  };
+
+  const handleChangeTwo = () => {
+    setCheckBox1(false);
+    setCheckBox2(true);
+    setTipoDeEquipamento(2);
+    getParts();
+  };
+
+  const getParts = async () => {
+    setEquipamentos(
+      await getEquipamento({
+        tipo_equipamento: tipoDeEquipamento,
+      })
+    );
+  };
+
   return (
     <>
       <Header />
@@ -39,9 +68,10 @@ export const Menu = () => {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
-                    id="flexCheck"
+                    id="flexCheck1"
                     style={{ backgroundColor: "#D635578", color: "#FFF" }}
+                    onChange={handleChangeOne}
+                    checked={checkBox1}
                   />
                   <label className="form-check-label">Computador</label>
                 </div>
@@ -49,9 +79,10 @@ export const Menu = () => {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
-                    id="flexCheck"
+                    id="flexCheck2"
                     style={{ backgroundColor: "#D635578", color: "#FFF" }}
+                    onChange={handleChangeTwo}
+                    checked={checkBox2}
                   />
                   <label className="form-check-label">Audio Visual</label>
                 </div>
@@ -60,26 +91,35 @@ export const Menu = () => {
                     className="form-control text-center"
                     style={{ width: 420, height: 65, borderColor: "#D63578" }}
                   >
-                    <option
-                      selected
-                      disabled
-                      hidden
-                      style={{ color: "#696F79" }}
-                    >
+                    <option selected>
                       Seleciona o equipamento a requisitar
                     </option>
-                    <option style={{ color: "#23C263" }}>
-                      COMPUTADOR HP - Disponível
-                    </option>
-                    <option style={{ color: "#23C263" }}>
-                      COMPUTADOR Acer - Disponível
-                    </option>
-                    <option disabled style={{ color: "#FF0000" }}>
-                      COMPUTADOR Asus - Ocupado
-                    </option>
-                    <option disabled style={{ color: "#FF0000" }}>
-                      COMPUTADOR Lenovo - Ocupado
-                    </option>
+                    {equipamentos &&
+                      equipamentos.length > 0 &&
+                      equipamentos.map((data) => {
+                        {
+                          if (data["estado"] === 1) {
+                            return (
+                              <option
+                                style={{ color: "#23C263" }}
+                                key={data["id"]}
+                              >
+                                {data["marca"]} - {data["modelo"]}
+                              </option>
+                            );
+                          } else if (data["estado"] === 2) {
+                            return (
+                              <option
+                                disabled
+                                style={{ color: "#FF0000" }}
+                                key={data["id"]}
+                              >
+                                {data["marca"]} - {data["modelo"]}
+                              </option>
+                            );
+                          }
+                        }
+                      })}
                   </select>
                 </div>
                 <div className="form-group" style={{ marginTop: 10 }}>

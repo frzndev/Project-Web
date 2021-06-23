@@ -139,7 +139,7 @@ export const Register = () => {
                     Email <span style={{ color: "#ff4d4d" }}>*</span>
                   </label>
                   <input
-                    type="text"
+                    type="email"
                     id="inputEmail"
                     className="form-control"
                     placeholder="Ex.: aXXXXX@alunos.ipb.pt"
@@ -158,7 +158,7 @@ export const Register = () => {
                     type="password"
                     id="inputPassword"
                     className="form-control"
-                    placeholder="*******************"
+                    placeholder="************"
                     style={{ width: 430, height: 65 }}
                     onChange={(e) => setPassword(e.currentTarget.value)}
                   />
@@ -175,7 +175,7 @@ export const Register = () => {
                     type="password"
                     id="inputConfPassword"
                     className="form-control"
-                    placeholder="*******************"
+                    placeholder="************"
                     style={{ width: 430, height: 65 }}
                     onChange={(e) => setConfirmPassword(e.currentTarget.value)}
                   />
