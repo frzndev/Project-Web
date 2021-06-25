@@ -53,5 +53,30 @@ class UtilizadorController extends ActiveController{
         
         return $response;
     }
+
+    public function actionFilter(){
+        $request = $this->request->getBodyParams();
+
+        $response = Utilizador::findByTypeUser($request['tipoDeUtilizador']);
+        
+        return $response;
+    }
+
+    public function actionId(){
+        $request = $this->request->getBodyParams();
+
+        $response = Utilizador::findById($request['idUser']);
+        
+        return $response;
+    }
+
+    public function actionRemove(){
+        $request = $this->request->getBodyParams();
+
+        $response = Utilizador::Remove($request['idUser']);
+
+        return $response;
+    }
+
 }
 ?>

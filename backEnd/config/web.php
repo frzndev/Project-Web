@@ -65,13 +65,13 @@ $config = [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'pluralize' => false,
-                    'controller' => 'api/equipamento'
+                    'controller' => 'api/devolucao'
                 ]
                 ,
                 [
                     'class' => 'yii\rest\UrlRule',
                     'pluralize' => false,
-                    'controller' => 'api/equipamento'
+                    'controller' => 'api/requisicao'
                 ]
             ],
         ],

@@ -1,6 +1,8 @@
 {
   "urlApi": {
     "users": "http://localhost:8080/api/utilizador/",
-    "equipamento": "http://localhost:8080/api/equipamento/"
+    "equipamento": "http://localhost:8080/api/equipamento/",
+    "devolucao": "http://localhost:8080/api/devolucao/",
+    "requisicao": "http://localhost:8080/api/requisicao/"
   }
 }

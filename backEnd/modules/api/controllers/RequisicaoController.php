@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
  */
 class RequisicaoController extends ActiveController{
 
-    public $modelClass =  Requisicao::class;
+    public $modelClass = Requisicao::class;
 
     public function behaviors(){
         return ArrayHelper::merge([
@@ -20,6 +20,34 @@ class RequisicaoController extends ActiveController{
                 'class' => Cors::className(),
             ],
         ], parent::behaviors());
-    } 
+    }
+
+    public function actionRegister(){
+        $request = $this->request->getBodyParams();
+
+        $response['requisicao'] = null;
+
+        $model = new Requisicao();
+        $model->estudante_id = $request['idUser'];
+        $model->equipamento_id = $request['idEquipamento'];
+        $model->quantidade = $request['quantidade'];
+        $model->data_requisicao = $request['dataRequisicao'];
+        $model->estado = $request['estado'];
+        $model->save();
+
+        $response['requisicao'] = $model;
+
+        return $response;
+    }
+
+    public function actionFilter(){
+        $request = $this->request->getBodyParams();
+
+        $response = Requisicao::findByIdUser($request['idUser']);
+
+        return $response;
+
+    }
+
 }
 ?>

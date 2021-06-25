@@ -64,4 +64,15 @@ class Equipamento extends \yii\db\ActiveRecord
         return static::findAll(['tipo_equipamento' => $type_equipament]);
     }
 
+    public static function findIdEquipament($id){
+        return static::findAll(['id' => $id]);
+    }
+
+    public static function Remove($id){
+        if (($model = static::findOne(['id' => $id])) !== null) {
+            $model->delete();
+            return $model;
+        }
+    }
+
 }

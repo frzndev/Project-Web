@@ -1,23 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/style.css";
-
+import { useAuth } from "../../contexts";
 import Header from "../../components/header";
 import Footer from "../../components/footer";
-import { getEquipamento } from "../../services/auth";
+import { getEquipamento, sendRequisicao } from "../../services/auth";
 
 export const Menu = () => {
+  const [msgErro, setMsgErro] = useState("");
+  const [display, setDisplay] = useState(false);
+
+  const { user } = useAuth();
+  const [idUser, setIdUser] = useState(user?.id);
+  const [idEquipamento, setIdEquipamento] = useState("");
+  const [dataRequisicao, setDataRequisicao] = useState("");
+  const quantidade = 1;
+  const estado = 1;
+
   const [tipoDeEquipamento, setTipoDeEquipamento] = useState(1);
   const [equipamentos, setEquipamentos] = useState([]);
 
   const [checkBox1, setCheckBox1] = useState(false);
   const [checkBox2, setCheckBox2] = useState(false);
 
+  useEffect(() => {
+    const meses = [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+    ];
+
+    var date = new Date().getDate();
+    var month = new Date().getMonth();
+    var year = new Date().getFullYear();
+    var hours = new Date().getHours();
+    var min = new Date().getMinutes();
+    var sec = new Date().getSeconds();
+    setDataRequisicao(
+      year +
+        "-" +
+        meses[month] +
+        "-" +
+        date +
+        " " +
+        hours +
+        ":" +
+        min +
+        ":" +
+        sec
+    );
+  }, []);
+
   const handleChangeOne = () => {
     setCheckBox1(true);
     setCheckBox2(false);
     setTipoDeEquipamento(1);
+    setIdEquipamento("");
     getParts();
   };
 
@@ -25,6 +73,7 @@ export const Menu = () => {
     setCheckBox1(false);
     setCheckBox2(true);
     setTipoDeEquipamento(2);
+    setIdEquipamento("");
     getParts();
   };
 
@@ -34,6 +83,44 @@ export const Menu = () => {
         tipo_equipamento: tipoDeEquipamento,
       })
     );
+  };
+
+  const verifyFormRequisicao = (e: any) => {
+    e.preventDefault();
+
+    if (idEquipamento === "") {
+      setMsgErro("-> Tens de selecionar o Equipamento a Requisitar");
+      setDisplay(true);
+      setTimeout(() => {
+        setDisplay(false);
+      }, 3000);
+    }
+
+    sendForm();
+  };
+
+  const sendForm = async () => {
+    const send = await sendRequisicao({
+      idUser,
+      idEquipamento,
+      dataRequisicao,
+      quantidade,
+      estado,
+    });
+
+    if (!send) {
+      setMsgErro("-> Ocurreu um erro interno, tente mais tarde !");
+      setDisplay(true);
+      setTimeout(() => {
+        setDisplay(false);
+      }, 3000);
+    } else {
+      setMsgErro("-> Equipamento requisitado com sucesso !");
+      setDisplay(true);
+      setTimeout(() => {
+        setDisplay(false);
+      }, 5000);
+    }
   };
 
   return (
@@ -63,7 +150,16 @@ export const Menu = () => {
                   Requisitar Equipamento
                 </h4>
               </div>
-              <form style={{ width: 420 }}>
+              <form
+                onSubmit={(e) => verifyFormRequisicao(e)}
+                style={{ width: 420 }}
+              >
+                <h3
+                  className="erroMsg"
+                  style={display ? { display: "flex" } : { display: "none" }}
+                >
+                  {msgErro}
+                </h3>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -90,8 +186,9 @@ export const Menu = () => {
                   <select
                     className="form-control text-center"
                     style={{ width: 420, height: 65, borderColor: "#D63578" }}
+                    onChange={(e) => setIdEquipamento(e.target.value)}
                   >
-                    <option selected>
+                    <option selected hidden>
                       Seleciona o equipamento a requisitar
                     </option>
                     {equipamentos &&
@@ -102,9 +199,11 @@ export const Menu = () => {
                             return (
                               <option
                                 style={{ color: "#23C263" }}
+                                value={data["id"]}
                                 key={data["id"]}
+                                onClick={() => setIdEquipamento(data["id"])}
                               >
-                                {data["marca"]} - {data["modelo"]}
+                                {data["marca"]} - {data["modelo"]} (Disponível)
                               </option>
                             );
                           } else if (data["estado"] === 2) {
@@ -114,7 +213,8 @@ export const Menu = () => {
                                 style={{ color: "#FF0000" }}
                                 key={data["id"]}
                               >
-                                {data["marca"]} - {data["modelo"]}
+                                {data["marca"]} - {data["modelo"]}{" "}
+                                (Indisponível)
                               </option>
                             );
                           }
@@ -199,9 +299,6 @@ export const Menu = () => {
                       style={{ color: "#696F79" }}
                     >
                       Seleciona o equipamento a devolver
-                    </option>
-                    <option style={{ color: "#23C263" }}>
-                      COMPUTADOR Asus
                     </option>
                   </select>
                 </div>

@@ -93,4 +93,19 @@ class Utilizador extends \yii\db\ActiveRecord
     public static function findByLogin($login){
         return static::findOne(['login' => $login]);
     }
+
+    public static function findByTypeUser($type_user){
+        return static::findAll(['tipodeutilizador' => $type_user]);
+    }
+
+    public static function findById($id){
+        return static::findOne(['id' => $id]);
+    }
+
+    public static function Remove($id){
+        if (($model = static::findOne(['id' => $id])) !== null) {
+            $model->delete();
+            return $model;
+        }
+    }
 }

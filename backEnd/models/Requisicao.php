@@ -87,4 +87,8 @@ class Requisicao extends \yii\db\ActiveRecord
         return $this->hasOne(Utilizador::className(), ['id' => 'estudante_id']);
     }
 
+    public static function findByIdUser($idUser){
+        return static::findAll(['estudante_id' => $idUser]);
+    }
+
 }

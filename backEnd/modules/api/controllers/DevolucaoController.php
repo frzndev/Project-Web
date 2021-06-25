@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
  */
 class DevolucaoController extends ActiveController{
 
-    public $modelClass =  Devolucao::class;
+    public $modelClass = Devolucao::class;
 
     public function behaviors(){
         return ArrayHelper::merge([
